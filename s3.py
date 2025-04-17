@@ -18,3 +18,5 @@ def ingest_to_s3(filename, f, bucketname="ds4300-raw-slicedbread"):
     Bucket=bucketname,
     Key=filename
     )
+
+    print(f"finished putting {filename} in {bucketname} bucket!")

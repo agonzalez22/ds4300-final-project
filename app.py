@@ -13,7 +13,7 @@ st.header("Survey Analytics")
 f = st.file_uploader("Upload your survey results in a CSV below", on_change=move_next)
 
 if f: # only if f is real :3
-    ingest_to_s3(f.name, f)
+    ingest_to_s3(f.name, f, "ds4300-edited-slicedbread")
     
 
 
