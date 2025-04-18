@@ -9,7 +9,8 @@ conn = pymysql.connect(
             port=3306, # hm
             user=os.getenv("AWS_USER"),
             password= os.getenv("AWS_ACCESS_KEY_ID"),
-            autocommit=True
+            autocommit=True, 
+            database="test"
         )
 
 mycursor = conn.cursor()
