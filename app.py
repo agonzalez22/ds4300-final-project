@@ -76,7 +76,7 @@ if f:
     dct = defaultdict(list)
     for idx, row in df_rds.iterrows(): 
         dct[row['professor_name']].append(row['rating'])
-    
+    print(dct)
     avgs = {}
     for prof, ratings in dct.items(): 
         avgs[prof] = sum(ratings) / len(ratings) 
