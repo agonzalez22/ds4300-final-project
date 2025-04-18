@@ -4,6 +4,7 @@ from rds import get_all
 import boto3
 import os
 from collections import defaultdict
+import time
 
 import streamlit as st
 import pandas as pd
@@ -37,8 +38,7 @@ if f:
     # convert everything from the rds to df so we can use for visualizations
     df_rds = pd.DataFrame(res)
 
-    #NOTE: sanity check
-    print(df_rds)
+    time.sleep(5)
 
     df = st.session_state['df']
 
