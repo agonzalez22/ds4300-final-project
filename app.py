@@ -91,7 +91,7 @@ if f:
 
     # dropdown menus
     group_by = st.selectbox("Group by", ["class", "professor_name", "class + professor"])
-    metric = st.selectbox("Metric", ["rating", "sentiment"])
+    metric = st.selectbox("Metric", ["rating ", "sentiment"])
     sort = st.selectbox("Sort by", ["Ascending", "Descending", "Alphabetical"])
 
     # grouping
@@ -133,7 +133,7 @@ if f:
     ax.set_ylabel(group_by.replace("_", " ").title())
 
     # ratings 0-5
-    if metric == "rating":
+    if metric == "rating ":
         ax.set_xlim(0, grouped[metric].max() + 0.5)
 
     # sentiment can have positive/negative
