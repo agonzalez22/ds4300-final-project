@@ -10,7 +10,8 @@ conn = pymysql.connect(
             user=os.getenv("AWS_USER"),
             password= os.getenv("AWS_ACCESS_KEY_ID"),
             autocommit=True, 
-            database="test"
+            database="test", 
+            cursorclass=pymysql.cursors.DictCursor
         )
 
 mycursor = conn.cursor()
