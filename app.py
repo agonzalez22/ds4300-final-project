@@ -15,9 +15,9 @@ from wordcloud import WordCloud
 def move_next(): 
     print("WORKS")
 
-st.header("Survey Analytics")
+st.header("Rate my Professor Analytics")
 
-f = st.file_uploader("Upload your survey results in a CSV below", on_change=move_next)
+f = st.file_uploader("Upload your ratings results in a CSV below", on_change=move_next)
 
 try: 
     st.session_state['df'] = pd.read_csv(f)
@@ -76,12 +76,11 @@ if f:
     dct = defaultdict(list)
     for idx, row in df_rds.iterrows(): 
         dct[row['professor_name']].append(row['rating'])
-    print(dct)
+    
     avgs = {}
     for prof, ratings in dct.items(): 
         avgs[prof] = sum(ratings) / len(ratings) 
     fig2, ax2 = plt.subplots()
-    print(avgs)
     ax2.bar(avgs.keys(), height=avgs.values())
     ax2.set_xlabel("Professors")
     ax2.set_ylabel("Average Rating")
