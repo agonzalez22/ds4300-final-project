@@ -23,16 +23,13 @@ try:
 except: 
     pass
 
-if f: # only if f is real :3
-    ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
-    give_status()
-    # ingest_to_s3(f.name, f)
-
 def get_sentiment(text):
     return TextBlob(text).sentiment.polarity
 
 # put actual conds later
 if f:
+    # ingest to s3
+    ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
     # get from rds 
     res = get_all()
 
