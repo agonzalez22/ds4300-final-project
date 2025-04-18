@@ -63,7 +63,7 @@ if f:
     text_keywords = ""
     for row in df_rds['blurb_KeyPhrases']: 
         words = row.split(";")
-        text += f" {" ".join(words)}"
+        text_keywords += f" {" ".join(words)}"
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text_keywords)
 
     fig1_2, ax1_2 = plt.subplots()
