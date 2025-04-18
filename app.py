@@ -3,6 +3,7 @@ from io import StringIO
 from rds import get_all
 import boto3
 import os
+from collections import defaultdict
 
 import streamlit as st
 import pandas as pd
@@ -32,7 +33,12 @@ if f:
     ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
     # get from rds 
     res = get_all()
-    print(res)
+
+    # convert everything from the rds to df so we can use for visualizations
+    df_rds = pd.DataFrame(res)
+
+    #NOTE: sanity check
+    print(df_rds)
 
     df = st.session_state['df']
 
@@ -51,8 +57,35 @@ if f:
     ax1.imshow(wordcloud, interpolation="bilinear")
     ax1.axis("off")
     st.pyplot(fig1)
+
+    # viz 1.2: word cloud
+    st.subheader("Word Cloud (Keywords)")
+    text_keywords = ""
+    for row in df_rds['blurb_KeyPhrases']: 
+        words = row.split(";")
+        text += f" {" ".join(words)}"
+    wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text_keywords)
+
+    fig1, ax1 = plt.subplots()
+    ax1.imshow(wordcloud, interpolation="bilinear")
+    ax1.axis("off")
+    st.pyplot(fig1)
+
+    # 2: rating analysis by professor... 
+    st.subheader("Average Professor Ratings")
+    dct = defaultdict(list)
+    for idx, row in df_rds.iterrows(): 
+        dct[row['professor_name']].append(row['rating'])
     
-    # viz 2: customizable bar chart
+    avgs = {}
+    for prof, ratings in dct.items(): 
+        avgs[prof] = sum(ratings) / len(ratings) 
+    fig2, ax2 = plt.subplots()
+    ax2.bar(avgs.keys(), avgs.values())
+    ax2.set_xlabel("Professors")
+    ax2.set_ylabel("Average Rating")
+    
+    # viz 2.1: customizable bar chart
     st.subheader("Customizable Bar Chart")
 
     # dropdown menus
