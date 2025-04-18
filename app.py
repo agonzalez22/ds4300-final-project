@@ -32,6 +32,7 @@ if f:
     ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
     # get from rds 
     res = get_all()
+    print(res)
 
     df = st.session_state['df']
 
