@@ -66,10 +66,10 @@ if f:
         text += f" {" ".join(words)}"
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text_keywords)
 
-    fig1, ax1 = plt.subplots()
-    ax1.imshow(wordcloud, interpolation="bilinear")
-    ax1.axis("off")
-    st.pyplot(fig1)
+    fig1_2, ax1_2 = plt.subplots()
+    ax1_2.imshow(wordcloud, interpolation="bilinear")
+    ax1_2.axis("off")
+    st.pyplot(fig1_2)
 
     # 2: rating analysis by professor... 
     st.subheader("Average Professor Ratings")
@@ -84,6 +84,7 @@ if f:
     ax2.bar(avgs.keys(), avgs.values())
     ax2.set_xlabel("Professors")
     ax2.set_ylabel("Average Rating")
+    st.pyplot(fig2)
     
     # viz 2.1: customizable bar chart
     st.subheader("Customizable Bar Chart")
