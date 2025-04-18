@@ -15,4 +15,6 @@ conn = pymysql.connect(
 mycursor = conn.cursor()
 
 def get_all(): 
-    return mycursor.fetchall()
+    mycursor.execute("SELECT * FROM blurb_analysis")
+    results = mycursor.fetchall()
+    return results
