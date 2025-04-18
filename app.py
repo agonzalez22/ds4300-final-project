@@ -1,6 +1,6 @@
 from s3 import ingest_to_s3
 from io import StringIO
-from rds import give_status
+from rds import get_all
 import boto3
 import os
 
@@ -17,7 +17,11 @@ def move_next():
 st.header("Survey Analytics")
 
 f = st.file_uploader("Upload your survey results in a CSV below", on_change=move_next)
-st.session_state['df'] = pd.read_csv(f)
+
+try: 
+    st.session_state['df'] = pd.read_csv(f)
+except: 
+    pass
 
 if f: # only if f is real :3
     ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
@@ -29,12 +33,11 @@ def get_sentiment(text):
 
 # put actual conds later
 if f:
-    # upload to s3
-    # read back from s3
-    # check if csv file has the right columns?
-    print(f)
-    # df = pd.read_csv(f)
+    # get from rds 
+    res = get_all()
+
     df = st.session_state['df']
+
 
     st.subheader("Preview of Uploaded Data")
     st.dataframe(df.head())

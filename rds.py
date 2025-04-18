@@ -12,8 +12,7 @@ conn = pymysql.connect(
             autocommit=True
         )
 
+mycursor = conn.cursor()
 
-
-
-def give_status(): 
-    print(conn)
+def get_all(): 
+    return mycursor.fetchall()
