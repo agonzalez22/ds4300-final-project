@@ -81,7 +81,8 @@ if f:
     for prof, ratings in dct.items(): 
         avgs[prof] = sum(ratings) / len(ratings) 
     fig2, ax2 = plt.subplots()
-    ax2.bar(avgs.keys(), avgs.values())
+    print(avgs)
+    ax2.bar(avgs.keys(), height=avgs.values())
     ax2.set_xlabel("Professors")
     ax2.set_ylabel("Average Rating")
     st.pyplot(fig2)
