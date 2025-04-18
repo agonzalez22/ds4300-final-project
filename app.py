@@ -12,12 +12,12 @@ from textblob import TextBlob
 from wordcloud import WordCloud
 
 def move_next(): 
-    print(st.session_state)
-    print("PEEEEEE")
+    print("WORKS")
 
 st.header("Survey Analytics")
 
 f = st.file_uploader("Upload your survey results in a CSV below", on_change=move_next)
+st.session_state['df'] = pd.read_csv(f)
 
 if f: # only if f is real :3
     ingest_to_s3(f.name, f, "ds4300-raw-bucket-test")
@@ -32,8 +32,9 @@ if f:
     # upload to s3
     # read back from s3
     # check if csv file has the right columns?
-
-    df = pd.read_csv(f)
+    print(f)
+    # df = pd.read_csv(f)
+    df = st.session_state['df']
 
     st.subheader("Preview of Uploaded Data")
     st.dataframe(df.head())
