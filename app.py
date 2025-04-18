@@ -46,33 +46,61 @@ if f:
     ax1.imshow(wordcloud, interpolation="bilinear")
     ax1.axis("off")
     st.pyplot(fig1)
+    
+    # viz 2: customizable bar chart
+    st.subheader("Customizable Bar Chart")
 
-    # viz 2: sentiment by class (bar chart)
-    st.subheader("Average Sentiment by Class")
-    avg_sent = df.groupby("class")["sentiment"].mean().reset_index()
+    # dropdown menus
+    group_by = st.selectbox("Group by", ["class", "professor_name", "class + professor"])
+    metric = st.selectbox("Metric", ["rating", "sentiment"])
+    sort = st.selectbox("Sort by", ["Ascending", "Descending", "Alphabetical"])
 
-    fig2, ax2 = plt.subplots()
-    ax2.bar(avg_sent["class"], avg_sent["sentiment"])
-    ax2.set_title("Average Sentiment by Class")
-    ax2.set_ylabel("Sentiment")
-    ax2.set_xlabel("Class")
-    plt.xticks()
-    st.pyplot(fig2)
+    # grouping
+    if group_by == "class + professor":
+        group_cols = ["class", "professor_name"]
+        df["class_prof"] = df["class"] + " - " + df["professor_name"]
+        group_label = "class_prof"
+        grouped = df.groupby(group_cols)[metric].mean().reset_index()
+        grouped["label"] = grouped["class"] + " - " + grouped["professor_name"]
+    else:
+        group_label = group_by
+        grouped = df.groupby(group_label)[metric].mean().reset_index()
+        grouped["label"] = grouped[group_label]
 
-    # viz 3: prof ratings (horiz bar chart)
-    st.subheader("Professor Average Ratings")
-    avg_rating = df.groupby("professor_name")["rating"].mean().reset_index()
-    avg_rating = avg_rating.sort_values(by="rating")
+    if sort == "Alphabetical":
+        grouped = grouped.sort_values(by="label", ascending=False)
+    elif sort == "Ascending":
+        grouped = grouped.sort_values(by=metric)
+    else:
+        grouped = grouped.sort_values(by=metric, ascending=False)
 
-    fig3, ax3 = plt.subplots()
-    bars = ax3.barh(avg_rating["professor_name"], avg_rating["rating"])
+    fig, ax = plt.subplots(figsize=(10, max(4, len(grouped) * 0.4)))
+    bars = ax.barh(grouped["label"], grouped[metric])
 
     for bar in bars:
         width = bar.get_width()
-        ax3.text(width + 0.05, bar.get_y() + bar.get_height()/2, f"{width:.2f}", va="center")
+        padding = (grouped[metric].max() - grouped[metric].min()) * 0.02
+        height = bar.get_y() + bar.get_height() / 2
 
-    ax3.set_title("Average Rating by Professor")
-    ax3.set_xlabel("Rating")
-    ax3.set_ylabel("Professor")
-    ax3.set_xlim(0, df["rating"].max() + 0.5)
-    st.pyplot(fig3)
+        # positive values: value printed to the right of the bar
+        if width >= 0:
+            ax.text(width + padding, height, f"{width:.2f}", va="center", ha="left")
+        # negative values: value printed to the left of the bar
+        else:
+            ax.text(width - padding, height, f"{width:.2f}", va="center", ha="right")
+
+    ax.set_title(f"Average {metric.capitalize()} by {group_by.replace('_', ' ').title()}")
+    ax.set_xlabel(metric.capitalize())
+    ax.set_ylabel(group_by.replace("_", " ").title())
+
+    # ratings 0-5
+    if metric == "rating":
+        ax.set_xlim(0, grouped[metric].max() + 0.5)
+
+    # sentiment can have positive/negative
+    else:
+        min_val = min(0, grouped[metric].min())
+        max_val = grouped[metric].max()
+        ax.set_xlim(min_val - 0.1, max_val + 0.1)
+
+    st.pyplot(fig)
